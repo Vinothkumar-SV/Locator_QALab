@@ -1,0 +1,63 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <title>Testleaf LocatorX</title>
+  <link rel="stylesheet" href="src/popup.css" />
+</head>
+<body>
+  <header>
+    <div>
+      <h1>Testleaf LocatorX</h1>
+      <small>Playwright Locator Inspector</small>
+    </div>
+    <span class="badge">Phase 1</span>
+  </header>
+
+  <section class="toolbar">
+    <button id="inspectBtn" class="primary">🎯 Inspect Element</button>
+    <button id="stopBtn">Stop</button>
+    <button id="clearBtn">Clear</button>
+  </section>
+
+  <div id="status" class="status">Open a normal web page, then click Inspect Element.</div>
+
+  <section id="elementCard" class="card hidden">
+    <h2>Selected Element</h2>
+    <pre id="elementSummary"></pre>
+  </section>
+
+  <section id="results" class="hidden">
+    <div class="section-title">
+      <h2>Generated Locators</h2>
+      <span id="count"></span>
+    </div>
+    <div id="locatorList"></div>
+  </section>
+
+  <section class="card">
+    <div class="section-title">
+      <h2>POM Collector</h2>
+      <span id="pomCount">0 elements</span>
+    </div>
+    <label>Class name</label>
+    <input id="className" value="GeneratedPage" />
+    <div class="row">
+      <button id="addPomBtn">+ Add Selected</button>
+      <button id="generatePomBtn">Generate POM</button>
+    </div>
+    <textarea id="pomOutput" placeholder="Generated Page Object Model appears here..."></textarea>
+    <button id="copyPomBtn">Copy POM</button>
+  </section>
+
+  <section class="card">
+    <h2>Allure-ready setup</h2>
+    <p>The generated project snippet configures Playwright's Allure reporter.</p>
+    <button id="allureBtn">Generate Setup</button>
+    <textarea id="allureOutput" placeholder="Allure setup appears here..."></textarea>
+    <button id="copyAllureBtn">Copy Setup</button>
+  </section>
+
+  <script src="src/popup.js"></script>
+</body>
+</html>
