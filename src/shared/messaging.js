@@ -1,4 +1,4 @@
-import { withRetry } from './utils.js';
+import { MSG } from './constants.js';
 
 export async function getActiveTab() {
   const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
@@ -8,33 +8,23 @@ export async function getActiveTab() {
 export async function sendToActiveTab(message, options = {}) {
   const tab = await getActiveTab();
   if (!tab?.id) throw new Error('No active tab available');
-
-  // Guard against restricted URLs
-  const url = tab.url || '';
-  if (!/^https?:|^file:|^chrome-extension:/.test(url)) {
-    throw new Error(`Cannot operate on this page (${url.split(':')[0] || 'unknown'} scheme)`);
-  }
-
-  return withRetry(
-    () => chrome.tabs.sendMessage(tab.id, message, options),
-    { retries: 2, delay: 200 }
-  );
+  return chrome.tabs.sendMessage(tab.id, message, { frameId: 0, ...options });
 }
 
 export async function ensureContentScript(tabId) {
   try {
-    await chrome.tabs.sendMessage(tabId, { type: 'LOCATORX_PING' });
+    const r = await chrome.tabs.sendMessage(tabId, { type: MSG.PING }, { frameId: 0 });
+    if (r?.ok) return true;
+  } catch {}
+  try {
+    await chrome.scripting.executeScript({
+      target: { tabId, frameIds: [0] },
+      files: ['src/content/locator-engine.js', 'src/content/content.js'],
+    });
+    await new Promise(r => setTimeout(r, 100));
     return true;
-  } catch {
-    try {
-      await chrome.scripting.executeScript({
-        target: { tabId, allFrames: false },
-        files: ['src/content/locator-engine.js', 'src/content/content.js'],
-      });
-      return true;
-    } catch (e) {
-      console.warn('[LocatorX] Cannot inject content script:', e.message);
-      return false;
-    }
+  } catch (e) {
+    console.warn('[LocatorX] Cannot inject content script:', e.message);
+    return false;
   }
 }

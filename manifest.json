@@ -31,14 +31,18 @@
     "128": "src/assets/icons/icon128.png"
   },
   "content_scripts": [
-    {
-      "matches": ["<all_urls>"],
-      "js": ["src/content/locator-engine.js", "src/content/content.js"],
-      "run_at": "document_idle",
-      "all_frames": true,
-      "match_about_blank": true
-    }
-  ],
+  {
+    "matches": ["<all_urls>"],
+    "js": [
+      "src/content/locator-engine.js",
+      "src/content/action-recorder.js",
+      "src/content/content.js"
+    ],
+    "run_at": "document_idle",
+    "all_frames": true,
+    "match_about_blank": true
+  }
+],
   "web_accessible_resources": [
     {
       "resources": ["src/assets/*"],

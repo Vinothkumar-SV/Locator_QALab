@@ -29,6 +29,47 @@
     Open a normal web page, then click <strong>Inspect Element</strong>.
   </div>
 
+  <section id="recorderCard" class="card">
+  <div class="section-title">
+    <h2>🎬 Action Recorder</h2>
+    <span id="recCount" class="count-badge">0 steps</span>
+  </div>
+
+  <div class="row">
+    <button id="recStartBtn" class="primary">⏺ Record</button>
+    <button id="recStopBtn" disabled>⏹ Stop</button>
+    <button id="recClearBtn" class="danger-ghost" title="Clear steps">🗑</button>
+  </div>
+
+  <div id="recStatus" class="status">Idle. Click <strong>Record</strong> and interact with the page.</div>
+
+  <div id="recSteps" class="rec-steps hidden"></div>
+
+  <div class="row">
+    <label class="field">
+      <span>Test name (used in Allure)</span>
+      <input id="recTestName" value="Recorded user journey" />
+    </label>
+  </div>
+  <div class="row">
+    <label class="field">
+      <span>Allure suite</span>
+      <input id="recSuite" value="LocatorX Recorded Flows" />
+    </label>
+  </div>
+  <div class="row">
+    <label class="field">
+      <span>Feature / Epic</span>
+      <input id="recEpic" value="LocatorX" />
+    </label>
+  </div>
+
+  <div class="row">
+    <button id="recGenPomBtn" class="primary">⚙ Generate POM + Allure</button>
+    <button id="recGenTestBtn">🧪 Generate Test</button>
+  </div>
+</section>
+
   <section id="elementCard" class="card hidden">
     <div class="section-title">
       <h2>Selected Element</h2>
@@ -65,7 +106,7 @@
 
     <div class="row">
       <button id="addPomBtn" title="Add selected element to POM">+ Add Selected</button>
-      <button id="generatePomBtn">Generate POM</button>
+      <button id="generatePomBtn" class="primary">⚙ Generate POM (with Allure)</button>
       <button id="clearPomBtn" class="danger-ghost" title="Clear all POM items">🗑</button>
     </div>
 
