@@ -1,0 +1,92 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>LocatorX Pro</title>
+  <link rel="stylesheet" href="popup.css" />
+</head>
+<body>
+  <header>
+    <div class="brand">
+      <div class="logo">🎯</div>
+      <div>
+        <h1>LocatorX <span class="pro">PRO</span></h1>
+        <small>Playwright Locator Inspector · v2.0</small>
+      </div>
+    </div>
+    <span id="pageBadge" class="badge">—</span>
+  </header>
+
+  <section class="toolbar">
+    <button id="inspectBtn" class="primary" title="Start inspecting (Alt+Shift+L)">
+      🎯 Inspect Element
+    </button>
+    <button id="stopBtn" title="Stop inspecting">Stop</button>
+    <button id="clearBtn" title="Clear current selection">Clear</button>
+  </section>
+
+  <div id="status" class="status" role="status" aria-live="polite">
+    Open a normal web page, then click <strong>Inspect Element</strong>.
+  </div>
+
+  <section id="elementCard" class="card hidden">
+    <div class="section-title">
+      <h2>Selected Element</h2>
+      <button class="icon-btn" id="copySummaryBtn" title="Copy element summary">📋</button>
+    </div>
+    <pre id="elementSummary" class="element-summary"></pre>
+  </section>
+
+  <section id="results" class="hidden">
+    <div class="section-title">
+      <h2>Generated Locators</h2>
+      <div class="title-actions">
+        <label class="filter-toggle">
+          <input type="checkbox" id="onlyUnique" /> Unique only
+        </label>
+        <span id="count" class="count-badge"></span>
+      </div>
+    </div>
+    <div id="locatorList" class="locator-list"></div>
+  </section>
+
+  <section class="card">
+    <div class="section-title">
+      <h2>Page Object Model</h2>
+      <span id="pomCount" class="count-badge">0 elements</span>
+    </div>
+
+    <div class="row compact">
+      <label class="field">
+        <span>Class name</span>
+        <input id="className" value="GeneratedPage" placeholder="LoginPage" />
+      </label>
+    </div>
+
+    <div class="row">
+      <button id="addPomBtn" title="Add selected element to POM">+ Add Selected</button>
+      <button id="generatePomBtn">Generate POM</button>
+      <button id="clearPomBtn" class="danger-ghost" title="Clear all POM items">🗑</button>
+    </div>
+
+    <textarea id="pomOutput" placeholder="Generated Page Object Model appears here..." spellcheck="false"></textarea>
+    <button id="copyPomBtn" class="primary full">📋 Copy POM</button>
+  </section>
+
+  <section class="card">
+    <div class="section-title">
+      <h2>Allure-Ready Test Setup</h2>
+      <button class="icon-btn" id="allureBtn" title="Generate Allure setup">⚙</button>
+    </div>
+    <p class="hint">Configures Playwright with the Allure reporter plus an example test skeleton.</p>
+    <textarea id="allureOutput" placeholder="Allure setup appears here..." spellcheck="false"></textarea>
+    <button id="copyAllureBtn" class="primary full">📋 Copy Setup</button>
+  </section>
+
+  <footer>
+    <span>LocatorX Pro · © Vinoth QA LAB</span>
+  </footer>
+
+  <script type="module" src="popup.js"></script>
+</body>
+</html>

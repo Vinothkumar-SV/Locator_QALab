@@ -1,18 +1,51 @@
 {
   "manifest_version": 3,
-  "name": "Testleaf LocatorX",
-  "version": "1.0.0",
-  "description": "Inspect elements and generate scored Playwright locators with POM export.",
-  "permissions": ["activeTab", "scripting", "storage", "clipboardWrite"],
+  "name": "Vinoth_QA LAB LocatorX Pro",
+  "version": "2.0.0",
+  "description": "Enterprise-grade element inspector with AI-scored Playwright locators, POM export, and CI-ready output.",
+  "minimum_chrome_version": "114",
+  "permissions": [
+    "activeTab",
+    "scripting",
+    "storage",
+    "clipboardWrite",
+    "tabs"
+  ],
   "host_permissions": ["<all_urls>"],
-  "action": {
-    "default_title": "Testleaf LocatorX",
-    "default_popup": "popup.html"
+  "background": {
+    "service_worker": "src/background/service-worker.js",
+    "type": "module"
   },
-  "content_scripts": [{
-    "matches": ["<all_urls>"],
-    "js": ["src/content.js"],
-    "run_at": "document_idle",
-    "all_frames": true
-  }]
+  "action": {
+    "default_title": "LocatorX Pro",
+    "default_popup": "src/popup/popup.html",
+    "default_icon": {
+      "16": "src/assets/icons/icon16.png",
+      "48": "src/assets/icons/icon48.png",
+      "128": "src/assets/icons/icon128.png"
+    }
+  },
+  "icons": {
+    "16": "src/assets/icons/icon16.png",
+    "48": "src/assets/icons/icon48.png",
+    "128": "src/assets/icons/icon128.png"
+  },
+  "content_scripts": [
+    {
+      "matches": ["<all_urls>"],
+      "js": ["src/content/locator-engine.js", "src/content/content.js"],
+      "run_at": "document_idle",
+      "all_frames": true,
+      "match_about_blank": true
+    }
+  ],
+  "web_accessible_resources": [
+    {
+      "resources": ["src/assets/*"],
+      "matches": ["<all_urls>"]
+    }
+  ],
+  "content_security_policy": {
+    "extension_pages": "script-src 'self'; object-src 'self'"
+  }
 }

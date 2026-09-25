@@ -1,338 +1,238 @@
-# 🎯 Locator QA Lab
+# 🎯 LocatorX Pro — Enterprise Playwright Locator Inspector
 
-> Interactive Web Application to Practice Selenium & Playwright Locators
+> A production-ready Chrome extension for QA teams: inspect any element, generate **scored, AI-ranked Playwright locators**, and export **Page Object Models** + **Allure-ready test setups**.
 
-![TypeScript](https://img.shields.io/badge/TypeScript-5.x-blue)
-![React](https://img.shields.io/badge/React-19-61DAFB)
-![Vite](https://img.shields.io/badge/Vite-7-purple)
+![Manifest V3](https://img.shields.io/badge/Manifest-V3-blue)
+![Playwright](https://img.shields.io/badge/Playwright-Ready-2EAD33)
 ![License](https://img.shields.io/badge/License-MIT-green)
 
 ---
 
-# 📖 Overview
+## ✨ Features
 
-**Locator QA Lab** is an interactive practice platform designed for QA Engineers and Automation Testers to master Selenium and Playwright locators.
+### 🔍 Intelligent Element Inspector
+- **Real-time hover overlay** showing tag, ARIA role, and accessible name
+- **Esc to cancel** any inspection
+- Works on `http`, `https`, `file://`, and dynamically rendered SPAs
+- Auto-injects content script if missing (no reload needed)
 
-Instead of learning locators theoretically, users can practice on real UI elements and immediately verify whether they have identified the correct locator.
+### 🧠 Scored Locator Generation (12+ Strategies)
+Every element yields a ranked list of Playwright locators, each scored 0–100:
 
-The application is ideal for:
+| Priority | Strategy | Base Score |
+|---------|----------|-----------|
+| 1 | `getByTestId` | 100 |
+| 2 | `getByRole(role, { name })` | 98 |
+| 3 | `getByRole` (regex name) | 92 |
+| 4 | `getByLabel` | 96 |
+| 5 | `getByAltText` | 94 |
+| 6 | `getByPlaceholder` | 88 |
+| 7 | `getByTitle` | 86 |
+| 8 | `getByText` | 84 |
+| 9 | `locator('#id')` | 82 |
+| 10 | Scoped CSS | 78 |
+| 11 | CSS Path | 65 |
+| 12 | XPath (relative) | 50 |
+| 13 | XPath (absolute) | 25 |
 
-- Beginners learning Selenium or Playwright
-- QA Automation Engineers
-- Students preparing for interviews
-- Trainers conducting automation workshops
-- Teams practicing locator strategies
+**Dynamic penalty engine** downgrades scores for:
+- Long numeric IDs (`/\\d{5,}/`)
+- Hash-like segments (`/[a-f0-9]{12,}/`)
+- `nth-of-type` chains
+- `/html/...` absolute paths
+
+**Bonus:** Unique-match locators get a `+5` boost.
+
+### 🏷️ Quality Tiers
+- 🟢 **BEST** (90–100) — Use in production
+- 🔵 **GOOD** (70–89) — Solid choice
+- 🟡 **FRAGILE** (45–69) — Use with caution
+- 🔴 **AVOID** (0–44) — Will break
+
+### 📦 Page Object Model Export
+- Collect elements across multiple page visits
+- Auto-generates TypeScript POM with:
+  - Typed `readonly` locators
+  - `goto(url)` helper
+  - `verifyAll()` — validates every locator resolves
+  - JSDoc header with generation timestamp
+- Deduplicates names automatically (`loginBtn`, `loginBtn2`, …)
+- Escapes unsafe identifiers
+
+### 🧪 Allure-Ready Test Setup
+One-click generation of:
+- Playwright config with list + HTML + Allure reporters
+- Environment info captured per run
+- Retries, traces, screenshots, videos
+- Example spec using the generated POM
+- Full CLI workflow (generate + open report)
+
+### ⚙️ Enterprise Architecture
+- **Manifest V3** with module service worker
+- **Shared constants & messaging layer** (`src/shared/`)
+- **Separated locator engine** (page context) from content shell
+- **Retry-backed message passing** (2 retries, exponential delay)
+- **Restricted-scheme guards** (`chrome://`, `about:`, etc.)
+- **History tracking** — last 50 selections persisted with URL/title
+- **Keyboard shortcut** — `Alt+Shift+L` to toggle inspector
+- **Auto-inject content scripts** when missing
+- **Esc-to-cancel** in inspector
+- **Filter: unique-only** view
+- **Copy shortcuts** — element summary, locator code, POM, Allure setup
+- **Live test button** — re-verify a locator's match count without leaving the popup
 
 ---
 
-# 🚀 Features
+## 📁 Project Structure
 
-## 🔍 Practice Different Locator Strategies
-
-Supports commonly used locator techniques:
-
-- ID
-- Name
-- Class Name
-- Tag Name
-- CSS Selector
-- XPath
-- Link Text
-- Partial Link Text
-- Text Locators
-- Placeholder
-- Alt Text
-- Role
-- Label
-- Test ID
-- nth-child
-- Parent Child
-- Sibling
-- Following
-- Ancestor
-- Descendant
+```
+LocatorX/
+├── manifest.json
+├── README.md
+└── src/
+    ├── background/
+    │   └── service-worker.js        # Lifecycle, storage router, commands
+    ├── content/
+    │   ├── locator-engine.js        # Scoring + strategy generation (page ctx)
+    │   └── content.js               # Inspector overlay + message router
+    ├── popup/
+    │   ├── popup.html               # UI shell
+    │   ├── popup.css                # Design system (design tokens + components)
+    │   └── popup.js                 # Controller / renderer
+    ├── shared/
+    │   ├── constants.js             # MSG, STORAGE_KEYS, QUALITY, settings
+    │   ├── messaging.js             # sendToActiveTab, ensureContentScript
+    │   └── utils.js                 # escapeHtml, sanitizeIdentifier, debounce
+    └── assets/
+        └── icons/                   # 16 / 48 / 128 px icons
+```
 
 ---
 
-## 🎯 Real Practice Environment
+## 🚀 Installation (Developer Mode)
 
-Practice against actual HTML elements instead of static examples.
-
-Includes
-
-- Buttons
-- Textboxes
-- Checkboxes
-- Radio Buttons
-- Dropdowns
-- Tables
-- Cards
-- Forms
-- Images
-- Links
+1. Clone the repo:
+   ```bash
+   git clone https://github.com/Vinothkumar-SV/Locator_QALab.git
+   cd Locator_QALab
+   ```
+2. Open Chrome → `chrome://extensions`
+3. Enable **Developer mode** (top-right)
+4. Click **Load unpacked** → select the project root
+5. Pin the extension to your toolbar
 
 ---
 
-## 🧪 Playwright Friendly
+## 🎬 Usage
 
-Practice locators like
+### Basic Inspection
+1. Navigate to any web page
+2. Click the LocatorX icon → **🎯 Inspect Element**
+3. Hover an element (see overlay) → click it
+4. Popup reopens with ranked locators
+
+### Build a POM
+1. Inspect an element → click **+ Add Selected**
+2. Repeat for multiple elements
+3. Enter a class name (e.g., `LoginPage`)
+4. Click **Generate POM** → **📋 Copy POM**
+
+### Verify Locators
+- Click **🧪 Test** on any locator to re-check its match count live
+- Toggle **Unique only** to hide multi-match candidates
+
+---
+
+## ⌨️ Keyboard Shortcuts
+
+| Shortcut | Action |
+|----------|--------|
+| `Alt+Shift+L` | Toggle inspector |
+| `Esc` | Cancel inspection |
+
+---
+
+## 🧪 Example Generated Locators
 
 ```ts
-page.locator()
-
-page.getByRole()
-
-page.getByText()
-
-page.getByLabel()
-
-page.getByPlaceholder()
-
-page.getByTestId()
+page.getByTestId('submit-button')
+page.getByRole('button', { name: 'Submit' })
+page.getByLabel('Email address')
+page.getByPlaceholder('Enter your password')
+page.getByText('Sign in', { exact: true })
+page.locator('#username')
+page.locator('form#login input[type="email"]')
+page.locator('xpath=//*[@id="app"]//button[2]')
 ```
 
 ---
 
-## ☕ Selenium Friendly
+## 🏗 Tech Stack
 
-Practice writing
-
-```java
-By.id()
-
-By.name()
-
-By.className()
-
-By.cssSelector()
-
-By.xpath()
-
-By.linkText()
-```
+| Layer | Tech |
+|-------|------|
+| Extension | Manifest V3, ES Modules |
+| Content | Vanilla JS, DOM APIs, XPath, CSS.escape |
+| Background | Service Worker (module) |
+| Popup | Vanilla JS, CSS custom properties |
+| Storage | `chrome.storage.local` |
+| Clipboard | `navigator.clipboard` |
 
 ---
 
-# 🎓 Learning Objectives
+## 🔒 Privacy & Permissions
 
-Users will learn
+- **`activeTab`** — inspect the current tab only after user action
+- **`scripting`** — inject content scripts on-demand
+- **`storage`** — persist POM & selection locally (never uploaded)
+- **`clipboardWrite`** — copy locators/POM/setup
+- **`<all_urls>`** — needed to inspect any site you visit
 
-- Choosing the best locator
-- Avoiding brittle XPath
-- Writing stable CSS Selectors
-- Relative XPath
-- Dynamic XPath
-- Accessibility based locators
-- Playwright Best Practices
+**No data leaves your browser.** No analytics, no telemetry, no external requests.
 
 ---
 
-# 🏗 Project Structure
+## 🗺 Roadmap
 
-```
-src
-│
-├── components
-│
-├── pages
-│
-├── locator-examples
-│
-├── utils
-│
-├── styles
-│
-├── assets
-│
-└── App.tsx
-```
+- [x] Scored locator generation
+- [x] Page Object Model export
+- [x] Allure-ready setup generator
+- [x] History & keyboard shortcuts
+- [ ] iframe / Shadow DOM inspection
+- [ ] Selenium (Java/Python/C#) export
+- [ ] Team-shared POM library (opt-in)
+- [ ] Diff mode — compare locators before/after DOM changes
+- [ ] CI export — GitHub Actions snippet
 
 ---
 
-# 💻 Tech Stack
-
-| Technology | Purpose |
-|------------|----------|
-| React | UI |
-| TypeScript | Development |
-| Vite | Build Tool |
-| HTML | Sample Elements |
-| CSS | Styling |
-
----
-
-# 🚀 Installation
-
-Clone repository
-
-```bash
-git clone https://github.com/Vinothkumar-SV/Locator_QALab.git
-```
-
-Navigate
-
-```bash
-cd Locator_QALab
-```
-
-Install dependencies
-
-```bash
-npm install
-```
-
-Run project
-
-```bash
-npm run dev
-```
-
-Build
-
-```bash
-npm run build
-```
-
----
-
-# 📚 Sample Practice Sections
-
-- Login Form
-- Registration Form
-- User Profile
-- Tables
-- Product Cards
-- Navigation Menu
-- Search Box
-- Alerts
-- Modals
-- Dynamic Lists
-- Nested Elements
-- Shadow DOM *(Upcoming)*
-- Frames *(Upcoming)*
-
----
-
-# 🎯 Best Locator Practices
-
-✔ Prefer ID whenever available
-
-✔ Use accessibility locators
-
-✔ Prefer Playwright built-in locators
-
-✔ Avoid absolute XPath
-
-✔ Avoid dynamic IDs
-
-✔ Write readable selectors
-
----
-
-# 📸 Screenshots
-
-## Home Page
-
-> *(Add screenshot here)*
-
----
-
-## Locator Practice
-
-> *(Add screenshot here)*
-
----
-
-## Result Validation
-
-> *(Add screenshot here)*
-
----
-
-# 📌 Roadmap
-
-## ✅ Current Features
-
-- Locator Practice Playground
-- Multiple UI Components
-- Selenium Examples
-- Playwright Examples
-- Responsive Design
-
----
-
-## 🚀 Upcoming Features
-
-- Locator Challenge Mode
-- Timer Based Practice
-- Difficulty Levels
-- Hint System
-- Score Board
-- Interview Questions
-- XPath Generator
-- CSS Selector Generator
-- Shadow DOM Practice
-- iframe Practice
-- Dynamic Web Tables
-- Drag & Drop Practice
-- File Upload Practice
-
----
-
-# 🤝 Contributing
-
-Contributions are welcome.
-
-Fork the repository
+## 🤝 Contributing
 
 ```bash
 git checkout -b feature/NewFeature
-```
-
-Commit changes
-
-```bash
-git commit -m "Added new feature"
-```
-
-Push
-
-```bash
+git commit -m "feat: add new feature"
 git push origin feature/NewFeature
 ```
 
-Create Pull Request
+Open a Pull Request. All contributions welcome.
 
 ---
 
-# 👨‍💻 Author
+## 👨‍💻 Author
 
-## Vinoth Kumar
-
-GitHub
-
-https://github.com/Vinothkumar-SV
+**Vinoth Kumar**
+GitHub: [@Vinothkumar-SV](https://github.com/Vinothkumar-SV)
 
 ---
 
-# ⭐ Support
+## 📄 License
 
-If this project helped you,
-
-⭐ Star the repository
-
-Share it with fellow QA Engineers.
+MIT © Vinoth Kumar
 
 ---
 
-# 📄 License
+## 🌟 Why LocatorX Pro?
 
-Licensed under the MIT License.
+Most locator tools stop at "here's an XPath." **LocatorX Pro gives you a ranked, scored, actionable list** — plus the POM and Allure scaffolding to ship it. It's built by QA engineers for QA engineers: minimal clicks, maximum signal, zero telemetry.
 
----
-
-# 🌟 Why Locator QA Lab?
-
-Locator QA Lab bridges the gap between theory and hands-on practice by providing a realistic environment to master Selenium and Playwright locators. It helps learners build confidence in writing reliable, maintainable, and interview-ready automation scripts.
-
-**Happy Learning! 🚀**
+**Happy Testing! 🚀**
